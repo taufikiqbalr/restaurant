@@ -12,6 +12,10 @@ parser = reqparse.RequestParser()
 parser.add_argument('username', help = 'This field cannot be blank', required = True)
 parser.add_argument('password', help = 'This field cannot be blank', required = True)
 
+class Home(Resource):
+    def get(self):
+        return "<h1>Hello World!</h1>"
+
 class UserRegistration(Resource):
     def post(self):
         data = parser.parse_args()
