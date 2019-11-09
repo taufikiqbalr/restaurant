@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 app = Flask(__name__)
 api = Api(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurant.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jalanyuk.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'o#kkfh$+p%q0di!9m&eq@tt3t_&r_lad0blz(z94%xq&v(-reg'
 app.config['JWT_SECRET_KEY'] = 'cc34c0a0-bd5a-4a3c-a50d-a2a7db7643df'
