@@ -116,8 +116,8 @@ class Planner(Resource):
         hotels =  HotelModel.ranking(coord)
         for hotel in hotels["hotels"]:
             this_coord = (hotel["latitude"], hotel["longitude"])
-            hotel["recreations"] = AttractionModel.ranking(this_coord)
-            hotel["restaurants"] = RestaurantModel.ranking(this_coord)
+            hotel["recreations"] = AttractionModel.ranking(this_coord)["attractions"][:10]
+            hotel["restaurants"] = RestaurantModel.ranking(this_coord)["restaurants"][:10]
         return hotels
 
 class Restaurant(Resource):
