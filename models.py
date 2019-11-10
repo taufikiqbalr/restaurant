@@ -1,5 +1,6 @@
 from run import db
 from passlib.hash import pbkdf2_sha256 as sha256
+from geopy.distance import distance
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -86,6 +87,46 @@ class RestaurantModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def ranking(coord):
+        def calculate():
+            datas = RestaurantModel.query.all()
+            for data in datas:
+                this_coord = (data.latitude, data.longitude)
+                dist = distance(coord, this_coord).km
+                data.distance = dist
+                data.distance_value = distance_value(dist)*30
+                data.rating_value = data.aggregate_rating*70
+                data.weight = (distance_value(dist)*30) + (data.aggregate_rating*70)
+            return datas
+        def to_json(x):
+            return {
+                'name': x.name,
+                'address': x.address,
+                'latitude': x.latitude,
+                'longitude': x.longitude,
+                'locality': x.locality,
+                'aggregate_rating': x.aggregate_rating,
+                'votes': x.votes,
+                'distance': x.distance,
+                'distance_value': x.distance_value,
+                'rating_value': x.rating_value,
+                'weight': x.weight,
+            }
+        def distance_value(x):
+            if (x < 1):
+                return 10
+            elif (x < 1.5):
+                return 8
+            elif (x < 2):
+                return 6
+            elif (x < 3):
+                return 4
+            elif (x < 4):
+                return 2
+            else:
+                return 1
+        return {'restaurants': sorted(list(map(lambda x: to_json(x), calculate())), key=lambda k: k['distance'], reverse=False)}
+
 class HotelModel(db.Model):
     __tablename__ = 'hotels'
     id = db.Column(db.Integer, primary_key = True)
@@ -124,6 +165,46 @@ class HotelModel(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def ranking(coord):
+        def calculate():
+            datas = HotelModel.query.all()
+            for data in datas:
+                this_coord = (data.latitude, data.longitude)
+                dist = distance(coord, this_coord).km
+                data.distance = dist
+                data.distance_value = distance_value(dist)*30
+                data.rating_value = data.aggregate_rating*70
+                data.weight = (distance_value(dist)*30) + (data.aggregate_rating*70)
+            return datas
+        def to_json(x):
+            return {
+                'name': x.name,
+                'address': x.address,
+                'latitude': x.latitude,
+                'longitude': x.longitude,
+                'locality': x.locality,
+                'aggregate_rating': x.aggregate_rating,
+                'votes': x.votes,
+                'distance': x.distance,
+                'distance_value': x.distance_value,
+                'rating_value': x.rating_value,
+                'weight': x.weight,
+            }
+        def distance_value(x):
+            if (x < 1):
+                return 10
+            elif (x < 1.5):
+                return 8
+            elif (x < 2):
+                return 6
+            elif (x < 3):
+                return 4
+            elif (x < 4):
+                return 2
+            else:
+                return 1
+        return {'hotels': sorted(list(map(lambda x: to_json(x), calculate())), key=lambda k: k['distance'], reverse=False)}
+
 class AttractionModel(db.Model):
     __tablename__ = 'attractions'
     id = db.Column(db.Integer, primary_key = True)
@@ -157,6 +238,46 @@ class AttractionModel(db.Model):
             return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
         except:
             return {'message': 'Something went wrong'}
+
+    def ranking(coord):
+        def calculate():
+            datas = AttractionModel.query.all()
+            for data in datas:
+                this_coord = (data.latitude, data.longitude)
+                dist = distance(coord, this_coord).km
+                data.distance = dist
+                data.distance_value = distance_value(dist)*30
+                data.rating_value = data.aggregate_rating*70
+                data.weight = (distance_value(dist)*30) + (data.aggregate_rating*70)
+            return datas
+        def to_json(x):
+            return {
+                'name': x.name,
+                'address': x.address,
+                'latitude': x.latitude,
+                'longitude': x.longitude,
+                'locality': x.locality,
+                'aggregate_rating': x.aggregate_rating,
+                'votes': x.votes,
+                'distance': x.distance,
+                'distance_value': x.distance_value,
+                'rating_value': x.rating_value,
+                'weight': x.weight,
+            }
+        def distance_value(x):
+            if (x < 1):
+                return 10
+            elif (x < 1.5):
+                return 8
+            elif (x < 2):
+                return 6
+            elif (x < 3):
+                return 4
+            elif (x < 4):
+                return 2
+            else:
+                return 1
+        return {'attractions': sorted(list(map(lambda x: to_json(x), calculate())), key=lambda k: k['distance'], reverse=False)}
 
     def add(self):
         db.session.add(self)

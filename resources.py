@@ -5,7 +5,6 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 import json
 from flask_jsonpify import jsonify
 import requests
-from geopy.distance import distance
 from geopy.geocoders import Nominatim
 
 parser = reqparse.RequestParser()
@@ -107,6 +106,19 @@ class SecretResource(Resource):
         return {
             'answer': 42
         }
+
+class Planner(Resource):
+    @jwt_required
+    def get(self, location):
+        geolocator = Nominatim(user_agent="python/flask")
+        loc = geolocator.geocode(location, timeout=5000)
+        coord=(loc.latitude, loc.longitude)
+        hotels =  HotelModel.ranking(coord)
+        for hotel in hotels["hotels"]:
+            this_coord = (hotel["latitude"], hotel["longitude"])
+            hotel["recreations"] = AttractionModel.ranking(this_coord)
+            hotel["restaurants"] = RestaurantModel.ranking(this_coord)
+        return hotels
 
 class Restaurant(Resource):
     @jwt_required
