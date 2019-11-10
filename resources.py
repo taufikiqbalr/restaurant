@@ -157,6 +157,44 @@ class Restaurant(Resource):
     def delete(self):
         return RestaurantModel.delete_all()
 
+class InjectHotel(Resource):
+    @jwt_required
+    def post(self):
+        hotel = request.get_json(force=True)
+        new_hotel = HotelModel(
+            name = hotel["name"],
+            address = hotel["address"],
+            latitude = hotel["latitude"],
+            longitude = hotel["longitude"],
+            locality = hotel["locality"],
+            aggregate_rating = hotel["aggregate_rating"],
+            votes = hotel["votes"],
+        )
+        try:
+            new_hotel.add()
+            return {'message': 'Added'}, 201
+        except:
+            return {'message': 'Something went wrong'}, 500
+
+class InjectAttraction(Resource):
+    @jwt_required
+    def post(self):
+        data = request.get_json(force=True)
+        new_data = AttractionModel(
+            name = data["name"],
+            address = data["address"],
+            latitude = data["latitude"],
+            longitude = data["longitude"],
+            locality = data["locality"],
+            aggregate_rating = data["aggregate_rating"],
+            votes = data["votes"],
+        )
+        try:
+            new_data.add()
+            return {'message': 'Added'}, 201
+        except:
+            return {'message': 'Something went wrong'}, 500
+
 class Hotel(Resource):
     @jwt_required
     def get(self):
